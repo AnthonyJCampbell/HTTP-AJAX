@@ -5,6 +5,7 @@ import axios from 'axios';
 // Components
 import Friend from './Components/Friend';
 import FriendForm from './Components/FriendForm';
+import EditForm from './Components/EditForm';
 
 class App extends Component {
   constructor() {
@@ -12,8 +13,17 @@ class App extends Component {
 
     this.state = {
       friends: [],
+      updating: true,
+      updatingFriend: {
+        name: '',
+        age: 0,
+        email: ''
+      }
     }
   }
+
+
+  
   componentDidMount () {
     axios.get('http://localhost:5000/friends')
     .then(response => this.setState({friends: response.data}))
@@ -26,25 +36,37 @@ class App extends Component {
       .catch(err => console.log(`Something's amiss. ${err}`))
   };
 
-  editUser = () => {
+  updateUser = (id) => {
+    const updatingFriend = this.state.friends.filter(friend=> friend.id === id)[0];
+    this.setState({updating: true, updatingFriend});
+  }
 
+  changeUser = (name, age, email, id) => {
+    axios.put(`http://localhost:5000/friends/${id}`, { name, age, email })
+      .then(res => this.setState({updating: true, friends: res.data}))
+      .catch(err => console.log(err));
   }
 
   deleteUser = (id) => {
     console.log(`You are deleting person with ID: ${id}`);
-
     axios.delete(`http://localhost:5000/friends/${id}`)
       .then(res => this.setState({ friends: res.data }))
       .catch(err => console.log(err));
   }
 
   render() {
+    
     return (
       <div className="App">
-        <FriendForm addNewUser={this.addNewUser} />
+        {/* {this.state.isUpdating ?  */}
+          <EditForm updatingFriend={this.state.updatingFriend} changeUser={this.changeUser}/> 
+        {/* : 
+          <FriendForm addNewUser={this.addNewUser} />
+      } */}
+        
         {this.state.friends.map((friend) => {
           return (
-            <Friend key={friend.id} friend={friend} deleteUser={this.deleteUser} />
+            <Friend key={friend.id} friend={friend} updateUser={this.updateUser} deleteUser={this.deleteUser} />
           );
         })}
       </div>

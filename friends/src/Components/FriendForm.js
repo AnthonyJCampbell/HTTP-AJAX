@@ -11,6 +11,7 @@ class FriendForm extends Component {
         };
     }
 
+
     postHandler = (event) => {
         event.preventDefault();
         this.props.addNewUser(
@@ -45,8 +46,8 @@ class FriendForm extends Component {
                 Email <input type="text" onChange={this.emailChange} /><br/>
                 <button onClick={this.postHandler}>Add Friend</button>
             </form>
-        );
-    }
+        )
+    };
 }
 
 export default FriendForm;
