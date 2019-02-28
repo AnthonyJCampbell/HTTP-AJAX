@@ -19,10 +19,17 @@ class App extends Component {
     .then(response => this.setState({friends: response.data}))
     .catch(err => console.log(err));
   }
+
+  addNewUser = (name, age, email) => {
+    axios.post('http://localhost:5000/friends', { name, age, email })
+      .then(res => this.setState({friends: res.data}))
+      .catch(err => console.log(`Something's amiss. ${err}`))
+  };
+
   render() {
     return (
       <div className="App">
-        <FriendForm />
+        <FriendForm addNewUser={this.addNewUser} />
         {this.state.friends.map((friend) => {
           return (
             <Friend key={friend.id} friend={friend}/>

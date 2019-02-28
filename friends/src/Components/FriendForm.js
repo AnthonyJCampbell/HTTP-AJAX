@@ -11,6 +11,15 @@ class FriendForm extends Component {
         };
     }
 
+    postHandler = (event) => {
+        event.preventDefault();
+        this.props.addNewUser(
+            this.state.nameInput, 
+            this.state.ageInput,
+            this.state.emailInput,
+        );
+    }
+
     nameChange = (event) => {
         this.setState({
             nameInput: event.target.value,
@@ -34,7 +43,7 @@ class FriendForm extends Component {
                 Name <input type="text" onChange={this.nameChange}/><br/>
                 Age <input type="text" onChange={this.ageChange} /><br/>
                 Email <input type="text" onChange={this.emailChange} /><br/>
-                <button>Add Friend</button>
+                <button onClick={this.postHandler}>Add Friend</button>
             </form>
         );
     }
