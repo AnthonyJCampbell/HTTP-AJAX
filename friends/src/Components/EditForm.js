@@ -25,7 +25,6 @@ class EditForm extends Component {
     }
     postHandler = (event) => {
         event.preventDefault();
-        console.log('it')
         this.props.changeUser(
             this.state.nameInput, 
             Number(this.state.ageInput),

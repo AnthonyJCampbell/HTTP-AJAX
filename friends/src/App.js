@@ -13,7 +13,7 @@ class App extends Component {
 
     this.state = {
       friends: [],
-      updating: true,
+      updating: false,
       updatingFriend: {
         name: '',
         age: 0,
@@ -38,12 +38,12 @@ class App extends Component {
 
   updateUser = (id) => {
     const updatingFriend = this.state.friends.filter(friend=> friend.id === id)[0];
-    this.setState({updating: true, updatingFriend});
+    this.setState(prevState => ({friends: prevState.friends, updating: true, updatingFriend}));
   }
 
   changeUser = (name, age, email, id) => {
     axios.put(`http://localhost:5000/friends/${id}`, { name, age, email })
-      .then(res => this.setState({updating: true, friends: res.data}))
+      .then(res => this.setState({updating: false, friends: res.data}))
       .catch(err => console.log(err));
   }
 
@@ -55,23 +55,25 @@ class App extends Component {
   }
 
   render() {
-    
-    return (
-      <div className="App">
-        {/* {this.state.isUpdating ?  */}
-          <EditForm updatingFriend={this.state.updatingFriend} changeUser={this.changeUser}/> 
-        {/* : 
-          <FriendForm addNewUser={this.addNewUser} />
-      } */}
-        
-        {this.state.friends.map((friend) => {
+    let isUpdating = this.state.updating;
+    let form;
+    if (isUpdating) {
+      form = <EditForm updatingFriend={this.state.updatingFriend} changeUser={this.changeUser}/>
+    } else {
+      form = <FriendForm addNewUser={this.addNewUser} />
+    }
+
+      return (
+        <div className="App">
+          {form}
+          {this.state.friends.map((friend) => {
           return (
             <Friend key={friend.id} friend={friend} updateUser={this.updateUser} deleteUser={this.deleteUser} />
           );
         })}
-      </div>
-    );
-  }
+        </div>
+      );
+    }
 }
 
 export default App;
