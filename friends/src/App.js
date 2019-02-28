@@ -26,13 +26,25 @@ class App extends Component {
       .catch(err => console.log(`Something's amiss. ${err}`))
   };
 
+  editUser = () => {
+
+  }
+
+  deleteUser = (id) => {
+    console.log(`You are deleting person with ID: ${id}`);
+
+    axios.delete(`http://localhost:5000/friends/${id}`)
+      .then(res => this.setState({ friends: res.data }))
+      .catch(err => console.log(err));
+  }
+
   render() {
     return (
       <div className="App">
         <FriendForm addNewUser={this.addNewUser} />
         {this.state.friends.map((friend) => {
           return (
-            <Friend key={friend.id} friend={friend}/>
+            <Friend key={friend.id} friend={friend} deleteUser={this.deleteUser} />
           );
         })}
       </div>
